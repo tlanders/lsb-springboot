@@ -50,7 +50,7 @@ public class ImageService {
             try {
                 Files.deleteIfExists(Paths.get(UPLOAD_ROOT, name));
             } catch (IOException ioe) {
-                // can ignore
+                throw new RuntimeException(ioe);
             }
         });
     }
