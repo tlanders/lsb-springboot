@@ -1,5 +1,7 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
+/upload
+/upload-temp
 
 ### STS ###
 .apt_generated
