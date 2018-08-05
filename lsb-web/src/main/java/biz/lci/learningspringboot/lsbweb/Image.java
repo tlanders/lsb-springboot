@@ -1,15 +1,12 @@
 package biz.lci.learningspringboot.lsbweb;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-//@NoArgsConstructor
+@Document
 public class Image {
-    private int id;
-    private String name;
-
-    public Image(int id, String n) {
-        this.id = id;
-        this.name = n;
-    }
+    @Id private final String id;
+    private final String name;
 }
