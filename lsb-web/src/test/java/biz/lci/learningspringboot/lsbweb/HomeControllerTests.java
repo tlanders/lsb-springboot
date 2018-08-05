@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -88,6 +89,19 @@ public class HomeControllerTests {
                 .expectBody(String.class);
 
         verify(imageService).findOneImage("xxx.png");
+        verifyNoMoreInteractions(imageService);
+    }
+
+    @Test
+    public void deleteShouldWork() {
+        given(imageService.deleteImage(any())).willReturn(Mono.empty());
+
+        webClient.delete().uri("/images/del.jpg")
+                .exchange()
+                .expectStatus().isSeeOther()
+                .expectHeader().valueEquals(HttpHeaders.LOCATION, "/");
+
+        verify(imageService).deleteImage("del.jpg");
         verifyNoMoreInteractions(imageService);
     }
 }
