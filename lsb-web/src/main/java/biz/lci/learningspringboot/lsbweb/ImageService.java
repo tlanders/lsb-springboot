@@ -1,5 +1,7 @@
 package biz.lci.learningspringboot.lsbweb;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
@@ -20,6 +22,7 @@ import java.nio.file.Paths;
 
 @Service
 public class ImageService {
+    private static final Logger log = LoggerFactory.getLogger(ImageService.class);
     private static final String UPLOAD_ROOT = "./upload";
 
     private final ResourceLoader resourceLoader;
@@ -42,7 +45,15 @@ public class ImageService {
     }
 
     public Mono<Void> createImage(Flux<FilePart> files) {
-        return files.flatMap(file -> file.transferTo(Paths.get(UPLOAD_ROOT, file.filename().toString()).toFile())).then();
+        return files.flatMap(file -> {
+            if(file.filename().length() <= 0) {
+                // no file specified
+                log.warn("Invalid file - image not created");
+                return Mono.empty();
+            } else {
+                return file.transferTo(Paths.get(UPLOAD_ROOT, file.filename()).toFile());
+            }
+        }).then();
     }
 
     public Mono<Void> deleteImage(String name) {
